@@ -2,9 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"sort"
 )
+
+const emptySymb = rune(' ')
+const defaultSymb = rune('|')
+const closerSymb = rune('└')
 
 func isFileCloser(index, dirSize int) bool {
 	if index == dirSize - 1 {
@@ -13,44 +18,38 @@ func isFileCloser(index, dirSize int) bool {
 	return false
 }
 
-func printBranches(out *os.File, fileCloser bool, nestingLvl int) {
-	for i := 0; i < nestingLvl; i++ {
-		fmt.Print("\t")
-		if i + 1 < nestingLvl {
-			fmt.Print("|")
+func printFile(out *os.File, file os.FileInfo, dirNamePrefix []rune) {
+	fmt.Printf("%c", dirNamePrefix[0])
+	for i := 1; i < len(dirNamePrefix); i++ {
+		fmt.Printf("\t")
+		if dirNamePrefix[i] != emptySymb {
+			fmt.Printf("%c", dirNamePrefix[i])
 		}
 	}
-	if fileCloser {
-		fmt.Print("└")
-	} else {
-		fmt.Print("|")
+	fmt.Printf("───%v", file.Name())
+	if !file.IsDir() {
+		if file.Size() == 0 {
+			fmt.Printf(" (empty)")
+		} else {
+			fmt.Printf(" (%vb)", file.Size())
+		}
 	}
-	fmt.Print("───")
+	fmt.Printf("\n")
 }
 
-func printFile(out *os.File, file os.FileInfo, fileCloser bool, nestingLvl int) {
-	printBranches(out, fileCloser, nestingLvl)
-	fmt.Printf("%v (", file.Name())
-	if file.Size() == 0 {
-		fmt.Printf("empty)\n")
-	} else {
-		fmt.Printf("%vb)\n", file.Size())
-	}
-}
-
-func printDir(out *os.File, file os.FileInfo, fileCloser bool, nestingLvl int) {
-	printBranches(out, fileCloser, nestingLvl)
-	fmt.Printf("%v\n", file.Name())
-}
-
-func readPath(path string) ([]os.FileInfo, error) {
+func readPath(path string, printFiles bool) ([]os.FileInfo, error) {
 	dirFile, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	files, err := dirFile.Readdir(0)
-	if err != nil {
-		return nil, err
+	files := make([]os.FileInfo, 0)
+	for file, err := dirFile.Readdir(1); err != io.EOF; file, err = dirFile.Readdir(1) {
+		if err != nil {
+			return nil, err
+		}
+		if file[0].IsDir() || printFiles {
+			files = append(files, file[0])
+		}
 	}
 	return files, nil
 }
@@ -63,35 +62,35 @@ func ConcatenatePaths(first string, second string) string {
 	return string(newStr)
 }
 
-func printDirectoryFiles(out *os.File, path string, printFiles bool, nestingLvl int) error {
-	files, err := readPath(path)
+func printDirectoryFiles(out *os.File, path string, printFiles bool, dirNamePrefix []rune) error {
+	files, err := readPath(path, printFiles) // creates an array of files in this directory
 	if err != nil {
 		return err
 	}
-
-	sort.Slice(files, func(i, j int) bool {
+	sort.Slice(files, func(i, j int) bool { // sorts alphabetically
 		return files[i].Name() < files[j].Name()
 	})
 
-	for i, file := range files {
-		fileCloser := isFileCloser(i, len(files))
-		if !file.IsDir() && printFiles {
-			printFile(out, file, fileCloser, nestingLvl)
+	for i, file := range files { // printing
+		if isFileCloser(i, len(files)) {
+			dirNamePrefix[len(dirNamePrefix) - 1] = closerSymb
 		}
-
+		printFile(out, file, dirNamePrefix)
+		if isFileCloser(i, len(files)) {
+			dirNamePrefix[len(dirNamePrefix) - 1] = emptySymb
+		}
 		if file.IsDir() {
-			printDir(out, file, fileCloser, nestingLvl)
-			err := printDirectoryFiles(out, ConcatenatePaths(path, file.Name()), printFiles, nestingLvl + 1)
-			if err != nil {
-				return err
-			}
+			tmp := append(dirNamePrefix, defaultSymb)
+			err := printDirectoryFiles(out, ConcatenatePaths(path, file.Name()), printFiles, tmp)
+			if err != nil { return err }
 		}
 	}
 	return nil
 }
 
 func dirTree(out *os.File, path string, printFiles bool) error {
-	return printDirectoryFiles(out, path, printFiles, 0)
+	dirNamePrefix := []rune{defaultSymb}
+	return printDirectoryFiles(out, path, printFiles, dirNamePrefix)
 }
 
 func main() {
