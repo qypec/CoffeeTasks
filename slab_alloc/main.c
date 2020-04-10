@@ -31,13 +31,13 @@ void free_slab(void *slab);
  **/
 void            cache_setup(struct cache *cache, size_t object_size)
 {
-    cache->object_size = object_size;
-    // cache->slab_order =
-    // cache->slab_objects =
+	cache->object_size = object_size;
+	// cache->slab_order =
+	// cache->slab_objects =
 
-    cache->empty_slabs = NULL;
-    cache->def_slabs = NULL;
-    cache->filled_slabs = NULL;
+	cache->empty_slabs = NULL;
+	cache->def_slabs = NULL;
+	cache->filled_slabs = NULL;
 }
 
 
@@ -50,7 +50,7 @@ void            cache_setup(struct cache *cache, size_t object_size)
  **/
 void cache_release(struct cache *cache)
 {
-    /* Реализуйте эту функцию. */
+	/* Реализуйте эту функцию. */
 }
 
 /**
@@ -62,26 +62,27 @@ void cache_release(struct cache *cache)
  **/
 void            *cache_alloc(struct cache *cache)
 {
-    t_list      *list_runner;
+	t_list      *list_runner;
 
-    /* проверяем список частично занятых slab`ов */
-    list_runner = cache->def_slabs;
-    while (list_runner != NULL)
-    {
-        if (((struct slab *)list_runner->value)->free_size != 0)
-            break;
-        list_runner = list_runner->next;
-    }
-    if (list_runner != NULL)
-        return (get_object_from_def(list_runner));
+	/* проверяем список частично занятых slab`ов */
+	list_runner = cache->def_slabs;
+	while (list_runner != NULL)
+	{
+		if (((struct slab *)list_runner->value)->free_size != 0)
+			break;
+		list_runner = list_runner->next;
+	}
+	if (list_runner != NULL)
+		return (get_object_from_def(cache, list_runner));
 
-    /* проверяем список свободных slab`ов */
-    if (cache->empty_slabs != NULL)
-        return get_object_from_empty(cache->empty_slabs);
-    
-    /* просим больше памяти */
-    if (alloc_memory(cache) == NULL)
-        return NULL
+	/* проверяем список свободных slab`ов */
+	if (cache->empty_slabs != NULL)
+		return get_object_from_empty(cache);
+	
+	/* просим больше памяти */
+	if (alloc_memory(cache) == NULL)
+		return NULL;
+	return get_object_from_empty(cache);
 }
 
 
@@ -92,7 +93,7 @@ void            *cache_alloc(struct cache *cache)
  **/
 void cache_free(struct cache *cache, void *ptr)
 {
-    /* Реализуйте эту функцию. */
+	/* Реализуйте эту функцию. */
 }
 
 
@@ -105,5 +106,5 @@ void cache_free(struct cache *cache, void *ptr)
  **/
 void cache_shrink(struct cache *cache)
 {
-    /* Реализуйте эту функцию. */
+	/* Реализуйте эту функцию. */
 }
