@@ -5,6 +5,8 @@ t_list					*ft_extracthead(t_list *lst)
 {
 	t_list				*tmp;
 
+	if (lst == NULL)
+		return NULL;
 	tmp = lst;
 	lst = lst->next;
 	tmp->next = NULL;
@@ -57,8 +59,6 @@ void					ft_lstdelhead(t_list **alst, void (*del)(void *, size_t))
 
 void					ft_lstdel(t_list **alst, void (*del)(void *, size_t))
 {
-	t_list				*tmp;
-
 	while (*alst != NULL)
 		ft_lstdelhead(alst, del);
 }
