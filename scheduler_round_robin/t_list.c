@@ -28,13 +28,13 @@ t_list					*ft_lstnew(void *content, size_t content_size)
 	return (list);
 }
 
-void					ft_lstpushback(t_list **alst, t_list *new)
+void					ft_lstpushback(t_list **alst, t_list *neww)
 {
-	if (new == NULL)
+	if (neww == NULL)
 		return ;
 	while (*alst != NULL)
 		alst = &(*alst)->next;
-	*alst = new;
+	*alst = neww;
 }
 
 void					ft_lstdelone(t_list **alst, void (*del)(void *, size_t))

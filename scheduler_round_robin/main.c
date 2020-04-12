@@ -97,7 +97,14 @@ void				wake_thread(int thread_id)
 	tmp = list_runner;
 	list_runner = list_runner->next;
 	tmp->next = NULL;
-	ft_lstpushback(&g_scheduler->thread_queue, tmp);
+	if (g_scheduler->running_thread == NULL)
+	{	
+		g_scheduler->running_thread = (t_thread *)tmp->content;
+		tmp->content = NULL;
+		ft_lstdelone(&tmp, del_content_thread);
+	}
+	else
+		ft_lstpushback(&g_scheduler->thread_queue, tmp);
 }
 
 /**
@@ -208,5 +215,6 @@ int					main(void)
 	printf("expected: 3, actual: %d\n", current_thread());
 	exit_thread(); // exit 3
 	printf("expected: -1, actual: %d\n", current_thread());
-	printf("\n");	
+	printf("\n");
+	scheduler_setup(1);
 }
