@@ -1,14 +1,14 @@
 
 # include "header.h"
 
-t_list					*ft_extracthead(t_list *lst)
+t_list					*ft_extracthead(t_list **lst)
 {
 	t_list				*tmp;
 
-	if (lst == NULL)
+	if (*lst == NULL)
 		return NULL;
-	tmp = lst;
-	lst = lst->next;
+	tmp = *lst;
+	*lst = (*lst)->next;
 	tmp->next = NULL;
 	return tmp;
 }

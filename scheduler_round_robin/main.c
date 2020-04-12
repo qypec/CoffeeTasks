@@ -41,7 +41,7 @@ void				exit_thread()
 	t_list			*tmp;
 
 	delete_thread(&g_scheduler->running_thread);
-	tmp = ft_extracthead(g_scheduler->thread_queue);
+	tmp = ft_extracthead(&g_scheduler->thread_queue);
 	if (tmp != NULL)
 	{
 		g_scheduler->running_thread = (t_thread *)tmp->content;
@@ -65,7 +65,7 @@ void				block_thread()
 	t_list			*tmp;
 
 	ft_lstpushback(&g_scheduler->blocked_thread, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
-	tmp = ft_extracthead(g_scheduler->thread_queue);
+	tmp = ft_extracthead(&g_scheduler->thread_queue);
 	if (tmp != NULL)
 	{
 		g_scheduler->running_thread = (t_thread *)tmp->content;
@@ -113,7 +113,7 @@ void				timer_tick()
 	{
 		g_scheduler->running_time_thread = 0;
 		ft_lstpushback(&g_scheduler->thread_queue, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
-		tmp = ft_extracthead(g_scheduler->thread_queue);
+		tmp = ft_extracthead(&g_scheduler->thread_queue);
 		if (tmp != NULL)
 		{
 			g_scheduler->running_thread = (t_thread *)tmp->content;
@@ -158,6 +158,8 @@ int					main(void)
 	timer_tick();
 	timer_tick();
 	printf("expected: 1, actual: %d\n", current_thread());
+	exit_thread();
+	printf("expected: -1, actual: %d\n", current_thread());
 	printf("\n");
 
 /* Test 03 */
@@ -172,5 +174,39 @@ int					main(void)
 	timer_tick();
 	timer_tick();
 	printf("expected: 1, actual: %d\n", current_thread());
+	exit_thread();
+	printf("expected: 2, actual: %d\n", current_thread());
+	exit_thread();
+	printf("expected: -1, actual: %d\n", current_thread());
 	printf("\n");
+
+/* Test 04 */
+	printf("Test 04\n");
+	new_thread(1);
+	printf("expected: 1, actual: %d\n", current_thread());
+	new_thread(2);
+	printf("expected: 1, actual: %d\n", current_thread());
+	new_thread(3);
+	printf("expected: 1, actual: %d\n", current_thread());
+	block_thread(); // block 1
+	printf("expected: 2, actual: %d\n", current_thread());
+	block_thread(); // block 2
+	printf("expected: 3, actual: %d\n", current_thread());
+	timer_tick();
+	timer_tick();
+	printf("expected: 3, actual: %d\n", current_thread());
+	wake_thread(2);
+	timer_tick();
+	timer_tick();
+	printf("expected: 2, actual: %d\n", current_thread());
+	exit_thread(); // exit 2
+	wake_thread(1);
+	timer_tick();
+	timer_tick();
+	printf("expected: 1, actual: %d\n", current_thread());
+	exit_thread(); // exit 1
+	printf("expected: 3, actual: %d\n", current_thread());
+	exit_thread(); // exit 3
+	printf("expected: -1, actual: %d\n", current_thread());
+	printf("\n");	
 }
