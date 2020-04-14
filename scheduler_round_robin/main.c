@@ -41,14 +41,10 @@ void				exit_thread()
 	t_list			*tmp;
 
 	delete_thread(&g_scheduler->running_thread);
+	g_scheduler->running_thread = NULL;
 	tmp = ft_extracthead(&g_scheduler->thread_queue);
 	if (tmp != NULL)
-	{
-		g_scheduler->running_thread = (t_thread *)tmp->content;
-		tmp->content = NULL; // зануляем поле content, чтобы далее не удалился наш thread
-	}
-	else
-		g_scheduler->running_thread = NULL;
+		g_scheduler->running_thread = create_thread(((t_thread *)tmp->content)->id);
 	ft_lstdelone(&tmp, del_content_thread);
 	g_scheduler->running_time_thread = 0;
 }
@@ -64,15 +60,12 @@ void				block_thread()
 {
 	t_list			*tmp;
 
-	ft_lstpushback(&g_scheduler->blocked_thread, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
+	if (g_scheduler->running_thread != NULL)
+		ft_lstpushback(&g_scheduler->blocked_thread, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
 	tmp = ft_extracthead(&g_scheduler->thread_queue);
+	g_scheduler->running_thread = NULL;
 	if (tmp != NULL)
-	{
-		g_scheduler->running_thread = (t_thread *)tmp->content;
-		tmp->content = NULL; // зануляем поле content, чтобы далее не удалился наш thread
-	}
-	else
-		g_scheduler->running_thread = NULL;
+		g_scheduler->running_thread = create_thread(((t_thread *)tmp->content)->id);
 	ft_lstdelone(&tmp, del_content_thread);
 	g_scheduler->running_time_thread = 0;
 }
@@ -85,26 +78,27 @@ void				block_thread()
 void				wake_thread(int thread_id)
 {
 	t_list			*list_runner;
-	t_list			*tmp;
+	size_t			list_counter;
+	t_thread		*new_thread;
 
 	list_runner = g_scheduler->blocked_thread;
+	list_counter = 0;
 	while (list_runner != NULL)
 	{
 		if (((t_thread *)list_runner->content)->id == thread_id)
 			break ;
 		list_runner = list_runner->next;
+		list_counter++;
 	}
-	tmp = list_runner;
-	list_runner = list_runner->next;
-	tmp->next = NULL;
+	if (list_runner == NULL)
+		return;
+		
+	new_thread = create_thread(((t_thread *)list_runner->content)->id);
 	if (g_scheduler->running_thread == NULL)
-	{	
-		g_scheduler->running_thread = (t_thread *)tmp->content;
-		tmp->content = NULL;
-		ft_lstdelone(&tmp, del_content_thread);
-	}
+		g_scheduler->running_thread = new_thread;
 	else
-		ft_lstpushback(&g_scheduler->thread_queue, tmp);
+		ft_lstpushback(&g_scheduler->thread_queue, ft_lstnew(new_thread, sizeof(t_thread *)));
+	ft_lstdelthis(&g_scheduler->blocked_thread, list_counter, del_content_thread);
 }
 
 /**
@@ -119,15 +113,12 @@ void				timer_tick()
 	if (g_scheduler->running_time_thread == g_scheduler->timeslice)
 	{
 		g_scheduler->running_time_thread = 0;
-		ft_lstpushback(&g_scheduler->thread_queue, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
+		if (g_scheduler->running_thread != NULL)
+			ft_lstpushback(&g_scheduler->thread_queue, ft_lstnew(g_scheduler->running_thread, sizeof(t_thread *)));
 		tmp = ft_extracthead(&g_scheduler->thread_queue);
+		g_scheduler->running_thread = NULL;
 		if (tmp != NULL)
-		{
-			g_scheduler->running_thread = (t_thread *)tmp->content;
-			tmp->content = NULL; // зануляем поле content, чтобы далее не удалился наш thread
-		}
-		else
-			g_scheduler->running_thread = NULL;
+			g_scheduler->running_thread = create_thread(((t_thread *)tmp->content)->id);
 		ft_lstdelone(&tmp, del_content_thread);
 	}
 }

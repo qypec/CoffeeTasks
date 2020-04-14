@@ -35,6 +35,8 @@ void					delete_thread(t_thread **t);
 
 void					del_content_thread(void *content, size_t content_size);
 
+void					ft_lstdelthis(t_list **alst, size_t lstnum, \
+											void (*del)(void *, size_t));
 t_list					*ft_lstnew(void *content, size_t content_size);
 void					ft_lstpushback(t_list **alst, t_list *neww);
 void					ft_lstdel(t_list **alst, void (*del)(void *, size_t));

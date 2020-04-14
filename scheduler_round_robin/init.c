@@ -54,7 +54,7 @@ t_thread				*create_thread(int thread_id)
 void					delete_thread(t_thread **t)
 {
 	printf("open thread\n");
-	if (t == NULL || *t == NULL)
+	if (*t == NULL)
 		return ;
 	printf("close thread\n");
 	(*t)->id = 0;
