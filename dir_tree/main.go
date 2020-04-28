@@ -1,3 +1,8 @@
+/*
+	Утилита tree.
+	Выводит дерево каталогов и файлов (если указана опция -f).
+*/
+
 package main
 
 import (
@@ -13,24 +18,26 @@ const closerSymb = rune('└')
 const bridgeSymb = rune('├')
 
 func isFileCloser(index, dirSize int) bool {
-	if index == dirSize - 1 {
+	if index == dirSize-1 {
 		return true
 	}
 	return false
 }
 
 func printFile(out io.Writer, file os.FileInfo, dirNamePrefix []rune) {
-	if dirNamePrefix[len(dirNamePrefix) - 1] == defaultSymb {
-		dirNamePrefix[len(dirNamePrefix) - 1] = bridgeSymb
+	if dirNamePrefix[len(dirNamePrefix)-1] == defaultSymb {
+		dirNamePrefix[len(dirNamePrefix)-1] = bridgeSymb
 	}
 	for i := 0; i < len(dirNamePrefix); i++ {
-		if i != 0 { fmt.Fprintf(out, "\t") }
+		if i != 0 {
+			fmt.Fprintf(out, "\t")
+		}
 		if dirNamePrefix[i] != emptySymb {
-			fmt.Fprintf(out,"%c", dirNamePrefix[i])
+			fmt.Fprintf(out, "%c", dirNamePrefix[i])
 		}
 	}
-	if dirNamePrefix[len(dirNamePrefix) - 1] == bridgeSymb {
-		dirNamePrefix[len(dirNamePrefix) - 1] = defaultSymb
+	if dirNamePrefix[len(dirNamePrefix)-1] == bridgeSymb {
+		dirNamePrefix[len(dirNamePrefix)-1] = defaultSymb
 	}
 	fmt.Fprintf(out, "───%v", file.Name())
 
@@ -38,7 +45,7 @@ func printFile(out io.Writer, file os.FileInfo, dirNamePrefix []rune) {
 		if file.Size() == 0 {
 			fmt.Fprintf(out, " (empty)")
 		} else {
-			fmt.Fprintf(out," (%vb)", file.Size())
+			fmt.Fprintf(out, " (%vb)", file.Size())
 		}
 	}
 	fmt.Fprintf(out, "\n")
@@ -80,16 +87,18 @@ func printDirectoryFiles(out io.Writer, path string, printFiles bool, dirNamePre
 
 	for i, file := range files { // printing
 		if isFileCloser(i, len(files)) {
-			dirNamePrefix[len(dirNamePrefix) - 1] = closerSymb
+			dirNamePrefix[len(dirNamePrefix)-1] = closerSymb
 		}
 		printFile(out, file, dirNamePrefix)
 		if isFileCloser(i, len(files)) {
-			dirNamePrefix[len(dirNamePrefix) - 1] = emptySymb
+			dirNamePrefix[len(dirNamePrefix)-1] = emptySymb
 		}
 		if file.IsDir() {
 			tmp := append(dirNamePrefix, defaultSymb)
 			err := printDirectoryFiles(out, ConcatenatePaths(path, file.Name()), printFiles, tmp)
-			if err != nil { return err }
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
