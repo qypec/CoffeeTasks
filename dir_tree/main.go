@@ -8,8 +8,9 @@ import (
 )
 
 const emptySymb = rune(' ')
-const defaultSymb = rune('|')
+const defaultSymb = rune('│')
 const closerSymb = rune('└')
+const bridgeSymb = rune('├')
 
 func isFileCloser(index, dirSize int) bool {
 	if index == dirSize - 1 {
@@ -18,23 +19,29 @@ func isFileCloser(index, dirSize int) bool {
 	return false
 }
 
-func printFile(out *os.File, file os.FileInfo, dirNamePrefix []rune) {
-	fmt.Printf("%c", dirNamePrefix[0])
-	for i := 1; i < len(dirNamePrefix); i++ {
-		fmt.Printf("\t")
+func printFile(out io.Writer, file os.FileInfo, dirNamePrefix []rune) {
+	if dirNamePrefix[len(dirNamePrefix) - 1] == defaultSymb {
+		dirNamePrefix[len(dirNamePrefix) - 1] = bridgeSymb
+	}
+	for i := 0; i < len(dirNamePrefix); i++ {
+		if i != 0 { fmt.Fprintf(out, "\t") }
 		if dirNamePrefix[i] != emptySymb {
-			fmt.Printf("%c", dirNamePrefix[i])
+			fmt.Fprintf(out,"%c", dirNamePrefix[i])
 		}
 	}
-	fmt.Printf("───%v", file.Name())
+	if dirNamePrefix[len(dirNamePrefix) - 1] == bridgeSymb {
+		dirNamePrefix[len(dirNamePrefix) - 1] = defaultSymb
+	}
+	fmt.Fprintf(out, "───%v", file.Name())
+
 	if !file.IsDir() {
 		if file.Size() == 0 {
-			fmt.Printf(" (empty)")
+			fmt.Fprintf(out, " (empty)")
 		} else {
-			fmt.Printf(" (%vb)", file.Size())
+			fmt.Fprintf(out," (%vb)", file.Size())
 		}
 	}
-	fmt.Printf("\n")
+	fmt.Fprintf(out, "\n")
 }
 
 func readPath(path string, printFiles bool) ([]os.FileInfo, error) {
@@ -62,7 +69,7 @@ func ConcatenatePaths(first string, second string) string {
 	return string(newStr)
 }
 
-func printDirectoryFiles(out *os.File, path string, printFiles bool, dirNamePrefix []rune) error {
+func printDirectoryFiles(out io.Writer, path string, printFiles bool, dirNamePrefix []rune) error {
 	files, err := readPath(path, printFiles) // creates an array of files in this directory
 	if err != nil {
 		return err
@@ -88,7 +95,7 @@ func printDirectoryFiles(out *os.File, path string, printFiles bool, dirNamePref
 	return nil
 }
 
-func dirTree(out *os.File, path string, printFiles bool) error {
+func dirTree(out io.Writer, path string, printFiles bool) error {
 	dirNamePrefix := []rune{defaultSymb}
 	return printDirectoryFiles(out, path, printFiles, dirNamePrefix)
 }
