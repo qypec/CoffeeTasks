@@ -1,3 +1,5 @@
+> Задача [Разработка веб-сервисов на Go](https://www.coursera.org/learn/golang-webservices-1/home/welcome)
+
 В этом задании мы пишем аналог unix pipeline, что-то вроде:
 ```
 grep 127.0.0.1 | awk '{print $2}' | sort | uniq -c | sort -nr
