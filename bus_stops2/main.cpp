@@ -13,7 +13,7 @@ int                                 main()
     string                          stop;
 
     cin >> Q;
-    number_counter = 1;ls
+    number_counter = 1;
     for (auto i = 0; i < Q; i++)
     {
         stop_list.clear();
