@@ -1,2 +1,2 @@
-BenchmarkSlow-4               43          44541442 ns/op        18628101 B/op     195749 allocs/op
-BenchmarkFast-4               97          15407930 ns/op         5381921 B/op      59541 allocs/op
+BenchmarkSlow-4               43          37145868 ns/op        18627051 B/op     195749 allocs/op
+BenchmarkFast-4              151           7681105 ns/op         4206669 B/op      18442 allocs/op

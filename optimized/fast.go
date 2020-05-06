@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "bufio"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,7 +11,17 @@ import (
 	// "log"
 )
 
+
+type User struct {
+	Browsers []interface{}
+	Email string
+	Name string
+}
+
 func FastSearch(out io.Writer) {
+	seenBrowsers := make(map[string]bool)
+	// foundUsers := ""
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
@@ -20,34 +31,19 @@ func FastSearch(out io.Writer) {
 	if err != nil {
 		panic(err)
 	}
-
-	seenBrowsers := make(map[string]bool)
-	foundUsers := ""
-
 	lines := strings.Split(string(fileContents), "\n")
+	fmt.Fprintln(out, "found users:")
+	for i, line := range lines {
+		isAndroid := false
+		isMSIE := false
 
-	users := make([]map[string]interface{}, 0)
-	for _, line := range lines {
-		user := make(map[string]interface{})
-		// fmt.Printf("%v %v\n", err, line)
+		user := User{}
 		err := json.Unmarshal([]byte(line), &user)
 		if err != nil {
 			panic(err)
 		}
-		users = append(users, user)
-	}
 
-	for i, user := range users {
-
-		isAndroid := false
-		isMSIE := false
-
-		browsers, ok := user["browsers"].([]interface{})
-		if !ok {
-			// log.Println("cant cast browsers")
-			continue
-		}
-
+		browsers := user.Browsers
 		for _, browserRaw := range browsers {
 			browser, ok := browserRaw.(string)
 			if !ok {
@@ -56,15 +52,11 @@ func FastSearch(out io.Writer) {
 			}
 			if ok := strings.Contains(browser, "Android"); ok {
 				isAndroid = true
-				if _, ok := seenBrowsers[browser]; !ok {
-					seenBrowsers[browser] = true;
-				}
+				seenBrowsers[browser] = true;
 			}
 			if ok := strings.Contains(browser, "MSIE"); ok {
 				isMSIE = true
-				if _, ok := seenBrowsers[browser]; !ok {
-					seenBrowsers[browser] = true;
-				}
+				seenBrowsers[browser] = true;
 			}
 		}
 
@@ -73,10 +65,8 @@ func FastSearch(out io.Writer) {
 		}
 
 		// log.Println("Android and MSIE user:", user["name"], user["email"])
-		email := strings.ReplaceAll(user["email"].(string), "@", " [at] ");
-		foundUsers += fmt.Sprintf("[%d] %s <%s>\n", i, user["name"], email)
+		email := strings.ReplaceAll(user.Email, "@", " [at] ");
+		fmt.Fprintf(out, "[%d] %s <%s>\n", i, user.Name, email)
 	}
-
-	fmt.Fprintln(out, "found users:\n"+foundUsers)
-	fmt.Fprintln(out, "Total unique browsers", len(seenBrowsers))
+	fmt.Fprintln(out, "\nTotal unique browsers", len(seenBrowsers))
 }
