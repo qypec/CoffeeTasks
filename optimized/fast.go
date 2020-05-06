@@ -21,8 +21,7 @@ func FastSearch(out io.Writer) {
 		panic(err)
 	}
 
-	seenBrowsers := []string{}
-	uniqueBrowsers := 0
+	seenBrowsers := make(map[string]bool)
 	foundUsers := ""
 
 	lines := strings.Split(string(fileContents), "\n")
@@ -55,19 +54,10 @@ func FastSearch(out io.Writer) {
 				// log.Println("cant cast browser to string")
 				continue
 			}
-			// if ok, err := regexp.MatchString("Android", browser); ok && err == nil {
 			if ok := strings.Contains(browser, "Android"); ok {
 				isAndroid = true
-				notSeenBefore := true
-				for _, item := range seenBrowsers {
-					if item == browser {
-						notSeenBefore = false
-					}
-				}
-				if notSeenBefore {
-					// log.Printf("SLOW New browser: %s, first seen: %s", browser, user["name"])
-					seenBrowsers = append(seenBrowsers, browser)
-					uniqueBrowsers++
+				if _, ok := seenBrowsers[browser]; !ok {
+					seenBrowsers[browser] = true;
 				}
 			}
 		}
@@ -78,19 +68,10 @@ func FastSearch(out io.Writer) {
 				// log.Println("cant cast browser to string")
 				continue
 			}
-			// if ok, err := regexp.MatchString("MSIE", browser); ok && err == nil {
 			if ok := strings.Contains(browser, "MSIE"); ok {
 				isMSIE = true
-				notSeenBefore := true
-				for _, item := range seenBrowsers {
-					if item == browser {
-						notSeenBefore = false
-					}
-				}
-				if notSeenBefore {
-					// log.Printf("SLOW New browser: %s, first seen: %s", browser, user["name"])
-					seenBrowsers = append(seenBrowsers, browser)
-					uniqueBrowsers++
+				if _, ok := seenBrowsers[browser]; !ok {
+					seenBrowsers[browser] = true;
 				}
 			}
 		}
