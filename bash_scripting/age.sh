@@ -1,3 +1,5 @@
+# Курс https://stepik.org/course/73/promo
+
 # Напишите скрипт на bash, который будет определять в какую возрастную группу попадают пользователи. При
 # запуске скрипт должен вывести сообщение "enter your name:" и ждать от пользователя ввода имени
 # (используйте read, чтобы прочитать его). Когда имя введено, то скрипт должен написать "enter your age:"
@@ -12,33 +14,29 @@
 
 #!/bin/bash
 
+check_arguments () # nothing 
+{
+	echo "enter your name:"; read name
+	if [[ $name == "" ]]; then
+		echo "bye"; exit
+	fi
+
+	echo "enter your age:"; read age
+	if [[ $age -eq 0 ]]; then
+		echo "bye"; exit
+	fi
+}
+
 name=""
 age=0
-
 while true ; do
-	echo "enter your name:"
-	read name
-	if [[ $name == "" ]]
-	then
-		break
-	fi
-	echo "enter your age:"
-	read age
-	if [[ $age -eq 0 ]]
-	then
-		break
-	fi
-
-    if [[ $age -le 16 ]]
-    then
+	check_arguments 
+    if [[ $age -le 16 ]]; then
         group="child"
-    elif [[ $age -le 25 && $age -ge 17 ]]
-    then
+    elif [[ $age -le 25 && $age -ge 17 ]]; then
         group="youth"
     else
         group="adult"
     fi
     echo "$name, your group is $group"
 done
-
-echo "bye"

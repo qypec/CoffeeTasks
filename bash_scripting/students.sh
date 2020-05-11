@@ -1,3 +1,5 @@
+# Курс https://stepik.org/course/73/promo
+
 # Напишите скрипт на bash, который принимает на вход один аргумент 
 # (целое число от 0 до бесконечности), который будет обозначать число
 # студентов в аудитории. В зависимости от значения числа нужно вывести разные сообщения. 
@@ -12,14 +14,11 @@
 
 #!/bin/bash
 
-if [[ $1 -eq 0 ]]
-then
+if [[ $1 -eq 0 ]]; then
     echo "No students"
-elif [[ $1 -eq 1 ]]
-then
+elif [[ $1 -eq 1 ]]; then
     echo "1 student"
-elif [[ $1 -ge 5 ]]
-then
+elif [[ $1 -ge 5 ]]; then
     echo "A lot of students"
 else
     echo "$1 students"
