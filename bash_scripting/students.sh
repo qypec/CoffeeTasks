@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Курс https://stepik.org/course/73/promo
 
 # Напишите скрипт на bash, который принимает на вход один аргумент 
@@ -11,8 +13,6 @@
 # 3 -->  3 students
 # 4 -->  4 students
 # 5 и больше --> A lot of students
-
-#!/bin/bash
 
 if [[ $1 -eq 0 ]]; then
     echo "No students"
