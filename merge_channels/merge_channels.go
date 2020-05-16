@@ -13,7 +13,6 @@ func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- 
 			x2 := <-in2
 			
 			res := make(chan int, 2)
-			defer close(res)
 			go executeWorker(f, x1, res)
 			go executeWorker(f, x2, res)
 			
@@ -22,6 +21,7 @@ func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- 
 				sum += <-res
 			}
 			out <- sum
+			close(res)
 		}
 	}()
 }

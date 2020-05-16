@@ -8,14 +8,15 @@ import (
 	// "sync"
 )
 
-func worker(x int) int {
+func blockingWorker(x int) int {
 	time.Sleep(1 * time.Millisecond)
 	return x * 10
 }
 
 const blockingTestNumbers = 1000
 
-func TestMergeChannels(t *testing.T) {
+// tests Merge2Channels for non-blocking
+func TestMerge2ChannelsBlocking(t *testing.T) {
 	ch1 := make(chan int, blockingTestNumbers)
 	ch2 := make(chan int, blockingTestNumbers)
 	out := make(chan int, blockingTestNumbers)
@@ -29,12 +30,13 @@ func TestMergeChannels(t *testing.T) {
 	}
 
 	start := time.Now()
-	Merge2Channels(worker, ch1, ch2, out, blockingTestNumbers)
+	Merge2Channels(blockingWorker, ch1, ch2, out, blockingTestNumbers)
 	end := int64(time.Since(start))
 
 	expectedTime := int64(time.Millisecond)
 	require.GreaterOrEqual(t, expectedTime, end, "blocking Merge2Channels")
 
+	// waiting for the completion goroutines to avoid datarace
 	for i := 0; i < blockingTestNumbers; i++ {
 		_ = <-out
 	}
