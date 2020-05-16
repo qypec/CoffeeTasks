@@ -1,15 +1,13 @@
 package main
 
-// import "fmt"
-
 func executeWorker(f func(int) int, x1 int, res chan<- int) {
 	res <- f(x1)
 }
 
+// test -> github.com/qypec/coffee-tasks/tree/master/merge_channels
 func Merge2Channels(f func(int) int, in1 <-chan int, in2 <-chan int, out chan<- int, n int) {
 	go func() {
 		for i := 0; i < n; i++ {
-			// fmt.Println("Merge2Channels ", i)
 			x1 := <-in1
 			x2 := <-in2
 

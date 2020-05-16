@@ -4,7 +4,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
-	// "sync"
 )
 
 func workerMillisecond(x int) int {
@@ -17,8 +16,7 @@ func workerSecond(x int) int {
 	return x * 10
 }
 
-// tests Merge2Channels for non-blocking (buffered / unbuffered channels)
-func TestMerge2ChannelsBlocking(t *testing.T) {
+func TestMerge2Channels(t *testing.T) {
 	testsNumber := 1000
 
 	in1 := make(chan int, testsNumber)
@@ -33,6 +31,7 @@ func TestMerge2ChannelsBlocking(t *testing.T) {
 		in2 <- i
 	}
 
+	// tests for non-blocking
 	start := time.Now()
 	Merge2Channels(workerMillisecond, in1, in2, out, testsNumber)
 	end := int64(time.Since(start))
@@ -62,5 +61,26 @@ func TestMerge2ChannelsBlocking(t *testing.T) {
 		in1 <- i
 		in2 <- i
 		_ = <-out
+	}
+}
+
+func BenchmarkMerge2Channels(b *testing.B) {
+	n := 100
+
+	in1 := make(chan int, n)
+	in2 := make(chan int, n)
+	out := make(chan int, n)
+	defer close(in1)
+	defer close(in2)
+	defer close(out)
+
+	for i := 0; i < b.N; i++ {
+		Merge2Channels(workerMillisecond, in1, in2, out, n)
+
+		for j := 0; j < n; j++ {
+			in1 <- j
+			in2 <- j
+			_ = <-out
+		}
 	}
 }
