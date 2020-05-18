@@ -1,11 +1,11 @@
 package main
 
 import (
-	"math/rand"
-	"testing"
 	"github.com/stretchr/testify/require"
 	"math/big"
+	"math/rand"
 	"strconv"
+	"testing"
 	// "fmt"
 )
 
@@ -33,7 +33,7 @@ func TestBigAddBasic(t *testing.T) {
 			[]byte{'1', '2', '3', '4', '5', '6', '7', '0'},
 		},
 	}
-	testExpected := []string {
+	testExpected := []string{
 		/* 1 */ "2468",
 		/* 2 */ "1234",
 		/* 3 */ "1000",
@@ -49,7 +49,7 @@ func generator(size int) string {
 	longNum := ""
 
 	longNum += strconv.Itoa(rand.Intn(8) + 1)
-	for i := 0; i < size - 1; i++ {
+	for i := 0; i < size-1; i++ {
 		longNum += strconv.Itoa(rand.Intn(9))
 	}
 	return longNum

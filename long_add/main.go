@@ -17,20 +17,20 @@ func max(a, b int) int {
 
 func toInt(a []byte, i int) int {
 	if i < len(a) {
-		return int(a[len(a) - i - 1]) - ascii0
+		return int(a[len(a)-i-1]) - ascii0
 	}
 	return 0
 }
 
 // BigAdd adds two big numbers
-// test -> 
+// test -> github.com/qypec/coffee-tasks/tree/master/long_add
 func BigAdd(a, b []byte) string {
 	carry := 0
-	res := make([]rune, max(len(a), len(b)) + 1)
+	res := make([]rune, max(len(a), len(b))+1)
 	for i := 0; i < max(len(a), len(b)); i++ {
 		aInt := toInt(a, i)
 		bInt := toInt(b, i)
-		res[len(res) - i - 1] = rune((aInt + bInt + carry) % 10 + ascii0);
+		res[len(res)-i-1] = rune((aInt+bInt+carry)%10 + ascii0)
 		carry = (aInt + bInt + carry) / 10
 	}
 	if carry != 0 {
