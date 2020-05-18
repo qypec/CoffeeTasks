@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 const ascii0 = int('0') // 48
@@ -23,42 +22,23 @@ func toInt(a []byte, i int) int {
 	return 0
 }
 
-// const digits = "0123456789"
-
-// func smallItoa(n int) string {
-// 	return digits[n : n+1]
-// }
-
-// func LongAddv2(a, b []byte) string {
-// 	var res string
-
-// 	carry := 0
-// 	for i := 0; i < max(len(a), len(b)); i++ {
-// 		aInt := toInt(a, i)
-// 		bInt := toInt(b, i)
-// 		res = smallItoa((aInt + bInt + carry) % 10) + res;
-// 		carry = (aInt + bInt + carry) / 10
-// 	}
-// 	if carry != 0 {
-// 		res = strconv.Itoa(carry) + res;
-// 	}
-// 	return res
-// }
-
-func LongAdd(a, b []byte) string {
-	var res string
-
+// BigAdd adds two big numbers
+// test -> 
+func BigAdd(a, b []byte) string {
 	carry := 0
+	res := make([]rune, max(len(a), len(b)) + 1)
 	for i := 0; i < max(len(a), len(b)); i++ {
 		aInt := toInt(a, i)
 		bInt := toInt(b, i)
-		res = strconv.Itoa((aInt + bInt + carry) % 10) + res;
+		res[len(res) - i - 1] = rune((aInt + bInt + carry) % 10 + ascii0);
 		carry = (aInt + bInt + carry) / 10
 	}
 	if carry != 0 {
-		res = strconv.Itoa(carry) + res;
+		res[0] = rune(carry + ascii0)
+	} else {
+		res = res[1:]
 	}
-	return res
+	return string(res)
 }
 
 func main() {
@@ -70,6 +50,6 @@ func main() {
 	scanner.Scan()
 	b := scanner.Bytes()
 
-	res := LongAdd(a, b)
+	res := BigAdd(a, b)
 	fmt.Println(res)
 }

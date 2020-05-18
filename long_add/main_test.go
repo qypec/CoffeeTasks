@@ -14,7 +14,7 @@ type test struct {
 	b []byte
 }
 
-func TestLongAddBasic(t *testing.T) {
+func TestBigAddBasic(t *testing.T) {
 	testCases := []test{
 		/* 1 */ test{
 			[]byte{'1', '2', '3', '4'},
@@ -41,7 +41,7 @@ func TestLongAddBasic(t *testing.T) {
 	}
 
 	for i, testCase := range testCases {
-		require.Equal(t, testExpected[i], LongAdd(testCase.a, testCase.b), "test %v", i)
+		require.Equal(t, testExpected[i], BigAdd(testCase.a, testCase.b), "test %v", i)
 	}
 }
 
@@ -55,7 +55,7 @@ func generator(size int) string {
 	return longNum
 }
 
-func TestLongAddLONG(t *testing.T) {
+func TestBigAddLONG(t *testing.T) {
 	seedsNumber := 10
 	testsNumber := 1000
 
@@ -71,20 +71,20 @@ func TestLongAddLONG(t *testing.T) {
 			bBig.SetString(b, 10)
 			aBig.Add(aBig, bBig)
 
-			require.Equal(t, aBig.String(), LongAdd([]byte(a), []byte(b)), "test %v", i)
+			require.Equal(t, aBig.String(), BigAdd([]byte(a), []byte(b)), "test %v", i)
 		}
 	}
 }
 
-func BenchmarkLongAdd(b *testing.B) {
+func BenchmarkBigAddMy(b *testing.B) {
 	ar := []byte(generator(1000))
 	br := []byte(generator(1000))
 	for i := 0; i < b.N; i++ {
-		LongAdd(ar, br)
+		BigAdd(ar, br)
 	}
 }
 
-func BenchmarkBigAdd(b *testing.B) {
+func BenchmarkBigAddLib(b *testing.B) {
 	ar := generator(1000)
 	br := generator(1000)
 	for i := 0; i < b.N; i++ {
@@ -93,5 +93,6 @@ func BenchmarkBigAdd(b *testing.B) {
 		bBig := new(big.Int)
 		bBig.SetString(br, 10)
 		aBig.Add(aBig, bBig)
+		aBig.String()
 	}
 }
