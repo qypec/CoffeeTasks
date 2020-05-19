@@ -10,7 +10,41 @@ import (
 const inputFileName = "input.txt"
 const outputFileName = "output.txt"
 
-// caching binary search
+// my implementation of caching binary search
+type cacheT struct {
+	toFind int
+	m      int
+}
+
+// caching remembers values until the next binarySearch call
+func (prev *cacheT) caching(toFind, m int) {
+	prev.toFind = toFind
+	prev.m = m
+}
+
+// prev.m - индекс, на котором завершился binarySearch в прошлый раз
+// toFind (следующее по очереди число) <= prev.toFind, т.к. toFind = target - num (см. функцию SeqSum), a num увеличивается с каждой итерацией
+// отсюда следует, что toFind может находится в пределах одной ячейки массива от prev.m
+// эти условия и проверяет checkCache
+func (prev *cacheT) checkCache(a []int, toFind, l, r int) (bool, int) {
+	if prev.m < l || prev.m > r {
+		return false, -1
+	} // prev.m out of range
+	if prev.toFind == toFind {
+		return true, -1
+	} // If the same `toFind`, then the last time it was not found
+	if a[prev.m] == toFind {
+		return true, prev.m
+	}
+	if a[prev.m-1] == toFind {
+		return true, prev.m - 1
+	}
+	if a[prev.m-1] < toFind && a[prev.m] > toFind {
+		return true, -1
+	}
+	return false, -1
+}
+
 func ascendingMoves(a []int, m int, toFind int, fix, l, r *int) {
 	if a[m] >= toFind {
 		if a[m] == toFind {
@@ -25,13 +59,21 @@ func ascendingMoves(a []int, m int, toFind int, fix, l, r *int) {
 /* BinarySearch finds the element that is equal than the given (toFind) */
 /* array a must be sorted */
 /* Complexity: log(n) */
-func binarySearch(a []int, toFind int, l, r int) int {
-	fix := -1
-	for l <= r {
-		m := l + int((r-l)/2)
-		ascendingMoves(a, m, toFind, &fix, &l, &r)
-		if fix != -1 { break }
+func binarySearch(a []int, toFind int, l, r int, prev cacheT) int {
+	if use, fix := prev.checkCache(a, toFind, l, r); use {
+		return fix
 	}
+
+	fix := -1
+	m := 0
+	for l <= r {
+		m = l + int((r-l)/2)
+		ascendingMoves(a, m, toFind, &fix, &l, &r)
+		if fix != -1 {
+			break
+		}
+	}
+	prev.caching(toFind, m)
 	return fix
 }
 
@@ -71,14 +113,16 @@ func quickSort(arr []int) { recQuickSort(arr, 0, len(arr)-1) }
 // tests -> github.com/qypec/coffee-tasks/tree/master/seq_sum
 func SeqSum(target int, seq []int) int {
 	quickSort(seq)
+	cache := cacheT{-1, -1}
 
 	// Searches for a number equal to `target - num` in a sequence
 	// nlog(n)
 	for i, num := range seq {
-		if num > target / 2 {
-			break 
+		if num > target/2 {
+			break
 		}
-		if fix := binarySearch(seq, target-num, i + 1, len(seq)-1); fix != -1 && fix != i {
+		fix := binarySearch(seq, target-num, i+1, len(seq)-1, cache)
+		if fix != -1 && fix != i {
 			return 1
 		}
 	}

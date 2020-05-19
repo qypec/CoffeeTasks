@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const limit = 5000000
+const limit = 2000000
 
 // go run testdata/generator.go
 func main() {
@@ -21,5 +21,4 @@ func main() {
 		fmt.Fprintf(file, "%v ", rand.Intn(999999995))
 		fmt.Println(i)
 	}
-	fmt.Fprintf(file, "0")
 }
