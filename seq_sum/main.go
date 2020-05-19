@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"sort"
+	"strconv"
 )
 
 const inputFileName = "input.txt"
@@ -87,23 +87,23 @@ func binarySearch(a []int, toFind int, l, r int) int {
 // SeqSum searches in a seq for two numbers that in total give a target.
 // If successful, it will return 1, otherwise it will return 0
 // Complexity: nlog(n)
-// tests -> !!!!
+// tests -> github.com/qypec/coffee-tasks/tree/master/seq_sum
 func SeqSum(target int, seq []int) int {
 	sort.Slice(seq, func(i, j int) bool { // nlog(n)
-			return seq[i] < seq[j]
+		return seq[i] < seq[j]
 	})
 
-	// Removes from the sequence numbers that are larger than the target. 
+	// Removes from the sequence numbers that are larger than the target.
 	// These numbers cannot have a pair.
 	// log(n)
-	if largerTarget := upperBound(seq, target, 0, len(seq) - 1); largerTarget != -1 {
+	if largerTarget := upperBound(seq, target, 0, len(seq)-1); largerTarget != -1 {
 		seq = seq[0:largerTarget]
 	}
 
 	// Searches for a number equal to `target - num` in a sequence
 	// nlog(n)
-	for _, num := range seq {
-		if binarySearch(seq, target - num, 0, len(seq) - 1) != -1 {
+	for i, num := range seq {
+		if fix := binarySearch(seq, target-num, 0, len(seq)-1); fix != -1 && fix != i {
 			return 1
 		}
 	}
