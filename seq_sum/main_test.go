@@ -24,6 +24,8 @@ func TestSeqSum(t *testing.T) {
 		/* 10 */ {0, []int{0}},
 		/* 11 */ {0, []int{0, 0}},
 		/* 12 */ {0, []int{0, 0, 0}},
+		/* 13 */ {22, []int{1, 3, 4, 12, 23, 24, 6, 3, 7, 10}},
+		/* 14 */ {6, []int{1, 7, 3, 4, 7, 9}},
 	}
 	expectedResult := []int{
 		/* 1 */ 1,
@@ -38,6 +40,8 @@ func TestSeqSum(t *testing.T) {
 		/* 10 */ 0,
 		/* 11 */ 1,
 		/* 12 */ 1,
+		/* 13 */ 1,
+		/* 14 */ 0,
 	}
 
 	for i, testCase := range testCases {

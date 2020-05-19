@@ -4,47 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 )
 
 const inputFileName = "input.txt"
 const outputFileName = "output.txt"
 
-// my implementation of upper bound (github.com/qypec/basic-algorithms/tree/master/upper_bound)
-func isDescending(a []int) bool {
-	if a[0] >= a[len(a)-1] {
-		return true
-	}
-	return false
-}
-
-/* UpperBound finds the first element that is strictly larger than the given (toFind) */
-/* array a must be sorted */
-/* log(n) */
-func upperBound(a []int, toFind int, l, r int) int {
-	if isDescending(a) {
-		if a[0] > toFind {
-			return 0
-		} else {
-			return -1
-		}
-	}
-
-	fix := -1
-	for l <= r {
-		m := l + int((r-l)/2)
-		if a[m] > toFind {
-			fix = m
-			r = m - 1
-		} else {
-			l = m + 1
-		}
-	}
-	return fix
-}
-
-// my implementation of binary search (github.com/qypec/basic-algorithms/tree/master/binary_search)
+// caching binary search
 func ascendingMoves(a []int, m int, toFind int, fix, l, r *int) {
 	if a[m] >= toFind {
 		if a[m] == toFind {
@@ -56,54 +22,63 @@ func ascendingMoves(a []int, m int, toFind int, fix, l, r *int) {
 	}
 }
 
-func descendingMoves(a []int, m int, toFind int, fix, l, r *int) {
-	if a[m] > toFind {
-		*l = m + 1
-	} else {
-		if a[m] == toFind {
-			*fix = m
-		}
-		*r = m - 1
-	}
-}
-
-/* BinarySearch finds the first element that is equal than the given (toFind) */
+/* BinarySearch finds the element that is equal than the given (toFind) */
 /* array a must be sorted */
 /* Complexity: log(n) */
 func binarySearch(a []int, toFind int, l, r int) int {
-	moves := ascendingMoves
-	if a[0] > a[len(a)-1] {
-		moves = descendingMoves
-	}
-
 	fix := -1
 	for l <= r {
 		m := l + int((r-l)/2)
-		moves(a, m, toFind, &fix, &l, &r)
+		ascendingMoves(a, m, toFind, &fix, &l, &r)
+		if fix != -1 { break }
 	}
 	return fix
 }
+
+// my implementation of quick sort (github.com/qypec/basic-algorithms/blob/master/quick_sort/)
+func partition(arr []int, l, r int) int {
+	pivot := arr[l]
+	j := l
+	for i := l + 1; i <= r; i++ {
+		if arr[i] <= pivot {
+			j++
+			arr[j], arr[i] = arr[i], arr[j]
+		}
+	}
+	arr[l], arr[j] = arr[j], arr[l]
+	return j
+}
+
+func recQuickSort(arr []int, l, r int) {
+	if l < 0 || r < 0 {
+		return
+	}
+	if l >= r {
+		return
+	}
+	m := partition(arr, l, r)
+	recQuickSort(arr, l, m-1)
+	recQuickSort(arr, m+1, r)
+}
+
+// QuickSort sorts an array
+// Complexity: nlog(n)
+func quickSort(arr []int) { recQuickSort(arr, 0, len(arr)-1) }
 
 // SeqSum searches in a seq for two numbers that in total give a target.
 // If successful, it will return 1, otherwise it will return 0
 // Complexity: nlog(n)
 // tests -> github.com/qypec/coffee-tasks/tree/master/seq_sum
 func SeqSum(target int, seq []int) int {
-	sort.Slice(seq, func(i, j int) bool { // nlog(n)
-		return seq[i] < seq[j]
-	})
-
-	// Removes from the sequence numbers that are larger than the target.
-	// These numbers cannot have a pair.
-	// log(n)
-	if largerTarget := upperBound(seq, target, 0, len(seq)-1); largerTarget != -1 {
-		seq = seq[0:largerTarget]
-	}
+	quickSort(seq)
 
 	// Searches for a number equal to `target - num` in a sequence
 	// nlog(n)
 	for i, num := range seq {
-		if fix := binarySearch(seq, target-num, 0, len(seq)-1); fix != -1 && fix != i {
+		if num > target / 2 {
+			break 
+		}
+		if fix := binarySearch(seq, target-num, i + 1, len(seq)-1); fix != -1 && fix != i {
 			return 1
 		}
 	}
@@ -126,7 +101,9 @@ func main() {
 	seq := make([]int, 0)
 	for scanner.Scan() {
 		num, _ := strconv.Atoi(scanner.Text())
-		seq = append(seq, num)
+		if num <= target {
+			seq = append(seq, num)
+		}
 	}
 
 	res := SeqSum(target, seq)
