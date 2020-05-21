@@ -76,19 +76,22 @@ func quickSort(arr []int, l, r int) {
 
 // SeqSum searches in a seq for two numbers that in total give a target.
 // If successful, it will return 1, otherwise it will return 0
-// Complexity: nlog(n)
+// Complexity: nlog(n) + n
 // tests -> github.com/qypec/coffee-tasks/tree/master/seq_sum
 func SeqSum(target int, seq []int) int {
-	quickSort(seq, 0, len(seq)-1)
+	quickSort(seq, 0, len(seq)-1) // nlog(n)
 
-	// Removes small numbers
-	i := upperBound(seq, target-seq[len(seq)-1], 0, len(seq)-1)
-
-	// Searches for a number equal to `target - seq[i]` in a sequence
-	for ; i >= 0 && i < len(seq); i++ {
-		fix := binarySearch(seq, target-seq[i], i+1, len(seq)-1)
-		if fix != -1 {
+	// lower := upperBound(seq, target-seq[len(seq)-1], 0, len(seq)-1) // Removes small numbers
+	lower := 0
+	upper := len(seq) - 1
+	for lower >= 0 && lower < upper {
+		sum := seq[lower] + seq[upper]
+		if sum == target {
 			return 1
+		} else if sum < target {
+			lower++
+		} else {
+			upper--
 		}
 	}
 	return 0

@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -21,13 +21,14 @@ func TestSeqSum(t *testing.T) {
 		/* 5 */ {3, []int{1, 1, 1, 1, 1, 1, 1}},
 		/* 6 */ {0, []int{0, 0}},
 		/* 7 */ {1, []int{1, 0}},
-		/* 8 */ {5, []int{1, 2, 5, 6, 2, 0, 3, 2, 4, 3, 3, 1, 0, 5, 5}},
+		/* 8 */ {5, []int{1, 2, 5, 2, 0, 3, 2, 4, 3, 3, 1, 0, 5, 5}},
 		/* 9 */ {99, []int{9, 7, 1, 2, 5, 6, 2, 0, 3, 2, 4, 3, 3, 1, 0, 5, 5}},
 		/* 10 */ {0, []int{0}},
 		/* 11 */ {0, []int{0, 0}},
 		/* 12 */ {0, []int{0, 0, 0}},
 		/* 13 */ {22, []int{1, 3, 4, 12, 6, 3, 7, 10}},
 		/* 14 */ {6, []int{1, 4, 3}},
+		/* 15 */ {22, []int{1, 3, 3, 4, 6, 7, 10, 11, 11, 11, 12, 20}},
 	}
 	expectedResult := []int{
 		/* 1 */ 1,
@@ -44,10 +45,11 @@ func TestSeqSum(t *testing.T) {
 		/* 12 */ 1,
 		/* 13 */ 1,
 		/* 14 */ 0,
+		/* 15 */ 1,
 	}
 
 	for i, testCase := range testCases {
-		// fmt.Printf("testCase %v\n", i + 1)
+		fmt.Printf("testCase %v\n", i+1)
 		require.Equal(t, expectedResult[i], SeqSum(testCase.target, testCase.seq), "test number %v\ntarget %v\nseq %v\n", i+1, testCase.target, testCase.seq)
 	}
 }
