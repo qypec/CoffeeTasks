@@ -3,52 +3,42 @@ package main
 import (
 	// "bufio"
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
-	// "io/ioutil"
 	"os"
 	"strings"
-	// "log"
 )
 
-
-type user struct {
-	Browsers []interface{}
+type User struct {
+	Browsers []string
 	Email string
 	Name string
 }
 
 func FastSearch(out io.Writer) {
 	seenBrowsers := make(map[string]bool)
-	// foundUsers := ""
 
 	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
+
 	fmt.Fprintln(out, "found users:")
 	for i := 0; scanner.Scan(); i++ {
 		line := scanner.Bytes()
 		isAndroid := false
 		isMSIE := false
 
-		user := user{}
-		err := json.Unmarshal(line, &user)
-		if err != nil {
+		user := User{}
+		if err := user.UnmarshalJSON(line); err != nil {
 			panic(err)
 		}
 
-		browsers := user.Browsers
-		for _, browserRaw := range browsers {
-			browser, ok := browserRaw.(string)
-			if !ok {
-				// log.Println("cant cast browser to string")
-				continue
-			}
+		for _, browser := range user.Browsers {
 			if ok := strings.Contains(browser, "Android"); ok {
 				isAndroid = true
 				seenBrowsers[browser] = true;
