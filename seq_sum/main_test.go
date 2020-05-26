@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"strings"
 	"testing"
-
+	"os"
 	"github.com/stretchr/testify/require"
 )
 
@@ -48,5 +48,122 @@ func TestSeqSumBasic(t *testing.T) {
 		out := new(bytes.Buffer)
 		SeqSum(in, out)
 		require.Equal(t, expectedResult[i], out.String(), "test number %v\n", i+1)
+	}
+}
+
+func BenchmarkSeqSumUpgradeTest01(b *testing.B) {
+	in, err := os.Open("testdata/test_01.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSum(in, out)
+	}
+}
+
+func BenchmarkSeqSumUpgradeTest02(b *testing.B) {
+	in, err := os.Open("testdata/test_02.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)
+	for i := 0; i < b.N; i++ {
+		SeqSum(in, out)
+	}
+}
+
+func BenchmarkSeqSumUpgradeTest03(b *testing.B) {
+	in, err := os.Open("testdata/test_03.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSum(in, out)
+	}
+}
+
+func BenchmarkSeqSumTest01(b *testing.B) {
+	in, err := os.Open("testdata/test_01.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSumPrev(in, out)
+	}
+}
+
+func BenchmarkSeqSumTest02(b *testing.B) {
+	in, err := os.Open("testdata/test_02.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)
+	for i := 0; i < b.N; i++ {
+		SeqSumPrev(in, out)
+	}
+}
+
+func BenchmarkSeqSumTest03(b *testing.B) {
+	in, err := os.Open("testdata/test_03.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSumPrev(in, out)
+	}
+}
+
+func BenchmarkSeqSumMapTest01(b *testing.B) {
+	in, err := os.Open("testdata/test_01.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSumMap(in, out)
+	}
+}
+
+func BenchmarkSeqSumMapTest02(b *testing.B) {
+	in, err := os.Open("testdata/test_02.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)
+	for i := 0; i < b.N; i++ {
+		SeqSumMap(in, out)
+	}
+}
+
+func BenchmarkSeqSumMapTest03(b *testing.B) {
+	in, err := os.Open("testdata/test_03.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	out := new(bytes.Buffer)	
+	for i := 0; i < b.N; i++ {
+		SeqSumMap(in, out)
 	}
 }
