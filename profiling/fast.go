@@ -11,8 +11,8 @@ import (
 
 type User struct {
 	Browsers []string
-	Email string
-	Name string
+	Email    string
+	Name     string
 }
 
 func FastSearch(out io.Writer) {
@@ -41,11 +41,11 @@ func FastSearch(out io.Writer) {
 		for _, browser := range user.Browsers {
 			if ok := strings.Contains(browser, "Android"); ok {
 				isAndroid = true
-				seenBrowsers[browser] = true;
+				seenBrowsers[browser] = true
 			}
 			if ok := strings.Contains(browser, "MSIE"); ok {
 				isMSIE = true
-				seenBrowsers[browser] = true;
+				seenBrowsers[browser] = true
 			}
 		}
 
@@ -54,7 +54,7 @@ func FastSearch(out io.Writer) {
 		}
 
 		// log.Println("Android and MSIE user:", user["name"], user["email"])
-		email := strings.ReplaceAll(user.Email, "@", " [at] ");
+		email := strings.ReplaceAll(user.Email, "@", " [at] ")
 		fmt.Fprintf(out, "[%d] %s <%s>\n", i, user.Name, email)
 	}
 	fmt.Fprintln(out, "\nTotal unique browsers", len(seenBrowsers))
