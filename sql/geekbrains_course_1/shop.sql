@@ -5,9 +5,9 @@ CREATE TABLE IF NOT EXISTS product (
   `brand_id` INT NOT NULL,
   `product_type_id` INT NOT NULL,
   `category_id` INT NOT NULL,
-  `price` DECIMAL(10, 2) NOT NULL,
+  `price` DECIMAL(10, 2) NOT NULL,  
   PRIMARY KEY(`id`));
-  
+
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 1, 1, 8999);
 
 CREATE TABLE IF NOT EXISTS category (
@@ -40,4 +40,17 @@ CREATE TABLE IF NOT EXISTS product_type (
 INSERT INTO product_type(`name`) VALUES("Платье");
 INSERT INTO product_type(`name`) VALUES("Футболка");
 
+CREATE TABLE IF NOT EXISTS `order` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(128) NOT NULL,
+  `phone` VARCHAR(32) NOT NULL,
+  `datetime` DATETIME NOT NULL,
+  PRIMARY KEY(`id`));
+
+INSERT INTO `order`(user_name, phone, datetime) VALUES('Василий', '555-55-55', '2016-05-09 14:20');
+
+CREATE TABLE IF NOT EXISTS order_products (
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `count` INT NOT NULL);
 
