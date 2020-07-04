@@ -25,3 +25,4 @@ INSERT INTO `order`(user_name, phone, datetime) VALUES('Александр', '33
 INSERT INTO order_products(order_id, product_id, count) VALUES(1, 1, 1);
 INSERT INTO order_products(order_id, product_id, count) VALUES(1, 2, 3);
 INSERT INTO order_products(order_id, product_id, count) VALUES(2, 4, 6);
+INSERT INTO order_products(order_id, product_id, count) VALUES(2, 2, 2);
