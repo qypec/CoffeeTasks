@@ -1,45 +1,37 @@
--- shop (before 10 lesson)
 
+drop table product;
 CREATE TABLE IF NOT EXISTS product (
   `id` INT NOT NULL AUTO_INCREMENT,
   `brand_id` INT NOT NULL,
   `product_type_id` INT NOT NULL,
   `category_id` INT NOT NULL,
   `price` DECIMAL(10, 2) NOT NULL,  
+  FOREIGN KEY(brand_id) REFERENCES brand(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY(product_type_id) REFERENCES product_type(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY(category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE NO ACTION,
   PRIMARY KEY(`id`));
 
-INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 1, 1, 8999);
-
+drop table category;
 CREATE TABLE IF NOT EXISTS category (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   `discount` TINYINT NOT NULL,
   `alias_name` VARCHAR(128),
   PRIMARY KEY(`id`));
-  
-INSERT INTO category(`name`, `discount`) VALUES('Женская одежда', '5');
-INSERT INTO category(`name`, `discount`) VALUES('Мужская одежда', '0');
-INSERT INTO category(`name`, `discount`) VALUES('Женская обувь', '10');
-INSERT INTO category(`name`, `discount`) VALUES('Мужская обувь', '15');
-INSERT INTO category(`name`, `discount`) VALUES('Шляпы', '0');
-  
+
+drop table brand;
 CREATE TABLE IF NOT EXISTS brand (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY(`id`));
-  
-INSERT INTO brand(`name`) VALUES("Marc O'Polo");
-INSERT INTO brand(`name`) VALUES("ALCOTT");
-INSERT INTO brand(`name`) VALUES("GUESS");
-  
+
+drop table product_type;
 CREATE TABLE IF NOT EXISTS product_type (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) NOT NULL,
   PRIMARY KEY(`id`));
 
-INSERT INTO product_type(`name`) VALUES("Платье");
-INSERT INTO product_type(`name`) VALUES("Футболка");
-
+drop table `order`;
 CREATE TABLE IF NOT EXISTS `order` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_name` VARCHAR(128) NOT NULL,
@@ -47,10 +39,8 @@ CREATE TABLE IF NOT EXISTS `order` (
   `datetime` DATETIME NOT NULL,
   PRIMARY KEY(`id`));
 
-INSERT INTO `order`(user_name, phone, datetime) VALUES('Василий', '555-55-55', '2016-05-09 14:20');
-
+drop table order_products;
 CREATE TABLE IF NOT EXISTS order_products (
   `order_id` INT NOT NULL,
   `product_id` INT NOT NULL,
   `count` INT NOT NULL);
-
