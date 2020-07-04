@@ -20,6 +20,8 @@ INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(3, 1, 1, 13990);
 
 INSERT INTO `order`(user_name, phone, datetime) VALUES('Василий', '555-55-55', '2016-05-09 14:20');
+INSERT INTO `order`(user_name, phone, datetime) VALUES('Александр', '333-33-33', '2015-03-10 08:36');
 
 INSERT INTO order_products(order_id, product_id, count) VALUES(1, 1, 1);
 INSERT INTO order_products(order_id, product_id, count) VALUES(1, 2, 3);
+INSERT INTO order_products(order_id, product_id, count) VALUES(2, 4, 6);
