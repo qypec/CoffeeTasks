@@ -15,6 +15,8 @@ INSERT INTO product_type(`name`) VALUES("Футболка");
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 1, 1, 8999);
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 2, 1, 7999);
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(2, 1, 3, 6999);
+INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(2, 2, 2, 1490);
+INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(3, 1, 1, 13990);
 
 INSERT INTO `order`(user_name, phone, datetime) VALUES('Василий', '555-55-55', '2016-05-09 14:20');
 
