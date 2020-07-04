@@ -11,6 +11,7 @@ INSERT INTO brand(`name`) VALUES("GUESS");
 
 INSERT INTO product_type(`name`) VALUES("Платье");
 INSERT INTO product_type(`name`) VALUES("Футболка");
+INSERT INTO product_type(`name`) VALUES("Туфли");
 
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 1, 1, 8999);
 INSERT INTO product(`brand_id`, `product_type_id`, `category_id`, price) VALUES(1, 2, 1, 7999);
