@@ -3,10 +3,10 @@ package main
 import (
 	// "fmt"
 	"bytes"
+	"github.com/stretchr/testify/require"
+	"os"
 	"strings"
 	"testing"
-	"os"
-	"github.com/stretchr/testify/require"
 )
 
 func TestSeqSumBasic(t *testing.T) {
@@ -58,7 +58,7 @@ func BenchmarkSeqSumUpgradeTest01(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSum(in, out)
 	}
@@ -84,7 +84,7 @@ func BenchmarkSeqSumUpgradeTest03(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSum(in, out)
 	}
@@ -97,7 +97,7 @@ func BenchmarkSeqSumTest01(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSumPrev(in, out)
 	}
@@ -123,7 +123,7 @@ func BenchmarkSeqSumTest03(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSumPrev(in, out)
 	}
@@ -136,7 +136,7 @@ func BenchmarkSeqSumMapTest01(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSumMap(in, out)
 	}
@@ -162,7 +162,7 @@ func BenchmarkSeqSumMapTest03(b *testing.B) {
 	}
 	defer in.Close()
 
-	out := new(bytes.Buffer)	
+	out := new(bytes.Buffer)
 	for i := 0; i < b.N; i++ {
 		SeqSumMap(in, out)
 	}

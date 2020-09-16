@@ -9,8 +9,8 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -42,7 +42,9 @@ func (p *PriorityQueue) siftingUp() {
 		if child.value > parent.value {
 			swap(&p.arr[child.index], &p.arr[parent.index])
 			swap(&child.index, &parent.index)
-		} else { break }
+		} else {
+			break
+		}
 	}
 }
 
@@ -63,12 +65,14 @@ func (p *PriorityQueue) siftingDown() {
 		if child.value > parent.value {
 			swap(&p.arr[child.index], &p.arr[parent.index])
 			swap(&child.index, &parent.index)
-		} else { break }
+		} else {
+			break
+		}
 	}
 }
 
 func (p PriorityQueue) GetChild(parent *Element) *Element {
-	childIndexLeft, childIndexRight := int(parent.index * 2), int(parent.index * 2 + 1)
+	childIndexLeft, childIndexRight := int(parent.index*2), int(parent.index*2+1)
 	if OutOfRange(childIndexLeft, 1, p.Len()) && OutOfRange(childIndexRight, 1, p.Len()) {
 		return nil
 	} else if OutOfRange(childIndexRight, 1, p.Len()) {
@@ -111,7 +115,9 @@ func (p *PriorityQueue) Insert(x int) {
 }
 
 func (p *PriorityQueue) ExtractMax() int {
-	if p.Len() == 0 { return 0 }
+	if p.Len() == 0 {
+		return 0
+	}
 	max := p.arr[1]
 	swap(&p.arr[1], &p.arr[p.Back().index])
 	p.arr = p.arr[:p.Len()]
@@ -140,7 +146,7 @@ func main() {
 		}
 	}
 
-	for _, elem := range(result) {
+	for _, elem := range result {
 		fmt.Println(elem)
 	}
 }

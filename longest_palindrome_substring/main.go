@@ -1,10 +1,9 @@
+package main
+
 // task description
 // https://leetcode.com/problems/longest-palindromic-substring/submissions/
 
-package main
-
 /* Expand Around Center */
-// Complexity: n^2
 func getPalindrome(s []rune, start, end int) (pal string) {
 	for (start >= 0 && end < len(s)) && (s[start] == s[end]) {
 		pal = string(s[start : end+1])
@@ -34,26 +33,25 @@ func longestPalindrome_ExpandAroundCenter(s string) string {
 }
 
 /* Dynamic programming */
-// Complexity: n^2
 func longestPalindrome_DynamicProgramming(s string) string {
 	n := len(s)
 	if n <= 1 {
 		return s
 	}
-	longest := string(s[0])
 
-	// initialize the table
+	// init
 	table := make([][]bool, n)
-	for i := range table {
+	for i := 0; i < n; i++ {
 		table[i] = make([]bool, n)
 	}
 
-	// filling in the main diagonal
+	// filling the main diagonal
 	for i := 0; i < n; i++ {
 		table[i][i] = true
 	}
+	longest := string(s[0])
 
-	// for palindrome of len = 2
+	// filling the table for palindromes of length = 2
 	for i := 0; i < n-1; i++ {
 		if s[i] == s[i+1] {
 			table[i][i+1] = true
@@ -61,12 +59,10 @@ func longestPalindrome_DynamicProgramming(s string) string {
 		}
 	}
 
-	// for palindrome greater than len = 2
-	// k is len of palindrome
+	// filling the table for palindromes of length greater than 2
 	for k := 3; k <= n; k++ {
 		for i := 0; i < n-k+1; i++ {
 			j := i + k - 1
-
 			if table[i+1][j-1] && s[i] == s[j] {
 				table[i][j] = true
 

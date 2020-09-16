@@ -31,7 +31,7 @@ import (
 
 type buffer struct {
 	queue *list.List
-	size int
+	size  int
 }
 
 func (b *buffer) isFull() bool {

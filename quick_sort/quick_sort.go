@@ -22,21 +22,20 @@ func quick_sort(arr []int, l, r int) {
 		return
 	}
 	m := partition(arr, l, r)
-	quick_sort(arr, m + 1, r)
-	quick_sort(arr, l, m - 1)
+	quick_sort(arr, m+1, r)
+	quick_sort(arr, l, m-1)
 }
-
 
 func main() {
 	arr := []int{1, 3, 2, 4}
-	quick_sort(arr, 0, len(arr) - 1)
+	quick_sort(arr, 0, len(arr)-1)
 	fmt.Println("1: ", arr)
-	
+
 	arr = []int{1, 3, 2}
-	quick_sort(arr, 0, len(arr) - 1)
+	quick_sort(arr, 0, len(arr)-1)
 	fmt.Println("2: ", arr)
-	
+
 	arr = []int{1, 3, 2, 13, 0, 4, 78, 8, 1, 1, 1}
-	quick_sort(arr, 0, len(arr) - 1)
+	quick_sort(arr, 0, len(arr)-1)
 	fmt.Println("3: ", arr)
 }

@@ -6,7 +6,7 @@
 	Формат входа. Первая строка входа содержит числа n и m. Вторая
 	содержит числа t0, . . . , tm−1, где ti — время, необходимое на обработку i-й задачи.
 	Считаем, что и процессоры, и задачи нумеруются с нуля.
-	
+
 	Формат выхода. Выход должен содержать ровно m строк: i-я (считая с нуля) строка должна
 	содержать номер процессора, который получит i-ю задачу на обработку, и время,
 	когда это произойдёт.
@@ -15,10 +15,10 @@
 package main
 
 import (
-	"github.com/qypec/basic-data-structures/tree/master/heap"
 	"bufio"
 	"container/list"
 	"fmt"
+	"github.com/qypec/basic-data-structures/tree/master/heap"
 	"os"
 	"strconv"
 )
@@ -66,7 +66,7 @@ func main() {
 
 		time = working.Front().Value.(Processor).startTime + duration[working.Front().Value.(Processor).taskId]
 		for e := working.Front(); e != nil; e = working.Front() {
-			if time != e.Value.(Processor).startTime + duration[e.Value.(Processor).taskId] {
+			if time != e.Value.(Processor).startTime+duration[e.Value.(Processor).taskId] {
 				break
 			}
 			resting.PushBack(Processor{id: e.Value.(Processor).id})

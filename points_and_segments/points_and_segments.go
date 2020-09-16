@@ -34,13 +34,13 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Split(bufio.ScanWords)
 
-/* scanning n and m */
+	/* scanning n and m */
 	scanner.Scan()
 	n, _ := strconv.Atoi(scanner.Text())
 	scanner.Scan()
 	m, _ := strconv.Atoi(scanner.Text())
 
-/* scanning segments */
+	/* scanning segments */
 	segmL := make([]int, 0)
 	segmR := make([]int, 0)
 	for i := 0; i < n; i++ {
@@ -52,7 +52,7 @@ func main() {
 		segmR = append(segmR, b)
 	}
 
-/* scanning dots */
+	/* scanning dots */
 	dots := make([]int, 0)
 	for i := 0; i < m; i++ {
 		scanner.Scan()
@@ -63,10 +63,14 @@ func main() {
 	sort.QuickSort3(segmL)
 	sort.QuickSort3(segmR)
 	for _, x := range dots {
-		countSegmL := sort.UpperBound(segmL, x, 0, len(segmL) - 1)
-		countSegmR := customBound(segmR, x, 0, len(segmR) - 1)
-		if countSegmL == -1 { countSegmL = len(segmL) }
-		if countSegmR == -1 { countSegmR = len(segmR) }
+		countSegmL := sort.UpperBound(segmL, x, 0, len(segmL)-1)
+		countSegmR := customBound(segmR, x, 0, len(segmR)-1)
+		if countSegmL == -1 {
+			countSegmL = len(segmL)
+		}
+		if countSegmR == -1 {
+			countSegmR = len(segmR)
+		}
 		num := countSegmL - countSegmR
 
 		fmt.Print(num)

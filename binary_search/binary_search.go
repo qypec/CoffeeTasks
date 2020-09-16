@@ -15,7 +15,7 @@ func binary_search(arr []int, toFind int) int {
 	r := len(arr) - 1
 	fix := len(arr)
 	for l <= r {
-		mid := l + int((r - l) / 2)
+		mid := l + int((r-l)/2)
 		if arr[mid] >= toFind {
 			if arr[mid] == toFind {
 				fix = mid

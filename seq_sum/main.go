@@ -11,7 +11,6 @@ import (
 const inputFileName = "input.txt"
 const outputFileName = "output.txt"
 
-
 func partition3(arr []int, l int, r int) (int, int) {
 	if r-l <= 1 { // len(arr) = 2
 		if arr[r] < arr[l] {
@@ -189,7 +188,7 @@ func SeqSumPrev(in io.Reader, out io.Writer) {
 		fix := binarySearch(seq, target-seq[i], i+1, len(seq)-1)
 		if fix != -1 {
 			ans = 1
-			break 
+			break
 		}
 	}
 	fmt.Fprintf(out, "%v", ans)
@@ -218,7 +217,7 @@ func SeqSumMap(in io.Reader, out io.Writer) {
 		if seqMap[num] == 0 {
 			delete(seqMap, num)
 		}
-		if _, ok := seqMap[target - num]; ok {
+		if _, ok := seqMap[target-num]; ok {
 			ans = 1
 			break
 		}
